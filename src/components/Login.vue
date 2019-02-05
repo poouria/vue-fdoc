@@ -1,72 +1,74 @@
 <template >
-  <div class="back">
-    <v-layout align-center justify-center row fill-height>
-      <v-flex  xs12 sm12 md6 lg4>
-        <v-card>
-          <v-img style="background-color: #00838F"
-                 :src="require('../../public/img/app/headerbg.png')"
-                 :lazy-src="require('../../public/img/app/headerbg.png')"
-                 aspect-ratio="2.1">
-            <v-card-title primary-title class="text-xs-center">
-              <v-container >
-                <v-img
-                  :src="require('../../public/img/app/logo-large.png')"
-                  :lazy-src="require('../../public/img/app/logo-large.png')"
-                  width="200"
-                  style = "margin: 0 auto"
-                ></v-img>
-                <h3 style="color: #EFEFEF" class="headline mb-0">دانشکده علوم پزشکی و خدمات بهداشتی درمانی آبادان</h3>
-                <div style="color: #6900ef" class="text-large">سامانه ثبت پزشکان تمام وقت</div>
+  <div class="back login Page">
+    <transition enter-active-class="animated fadeIn" appear>
+      <v-layout align-center justify-center row fill-height >
+        <v-flex  xs12 sm12 md6 lg4>
+          <v-card>
+            <v-img style="background-color: #00838F"
+                   :src="require('../../public/img/app/headerbg.png')"
+                   :lazy-src="require('../../public/img/app/headerbg.png')"
+                   aspect-ratio="2.1">
+              <v-card-title primary-title class="text-xs-center">
+                <v-container >
+                  <v-img
+                    :src="require('../../public/img/app/logo-large.png')"
+                    :lazy-src="require('../../public/img/app/logo-large.png')"
+                    width="200"
+                    style = "margin: 0 auto"
+                  ></v-img>
+                  <h3 style="color: #EFEFEF" class="headline mb-0">دانشکده علوم پزشکی و خدمات بهداشتی درمانی آبادان</h3>
+                  <div style="color: #6900ef" class="text-large">سامانه ثبت پزشکان تمام وقت</div>
+                </v-container>
+              </v-card-title>
+            </v-img>
+
+            <transition  enter-active-class="animated flash" leave-active-class="animated fadeOut">
+              <v-alert v-if="$store.state.globalErrorVar !==null" value="true" type="error">
+                {{ $store.state.globalErrorVar }}
+              </v-alert>
+            </transition>
+
+            <v-card-actions>
+              <v-container class="text-md-center">
+                <v-form  @submit.prevent="onsubmited" autocomplete="off">
+                  <v-text-field
+                    prepend-icon="person"
+                    v-model="username"
+                    :error-messages="usernameErrors"
+                    label="نام کاربری"
+                    name="username"
+                    required
+                    @keydown.enter="onsubmited"
+                    @input="$v.username.$touch()"
+                    @blur="$v.username.$touch()"></v-text-field>
+
+                  <v-text-field
+                    v-model="password"
+                    :error-messages="passwordErrors"
+                    label="کلمه عبور"
+                    name="password"
+                    type="password"
+                    prepend-icon="lock"
+                    required
+                    @keypress.enter="onsubmited"
+                    @input="$v.password.$touch()"
+                    @blur="$v.password.$touch()"></v-text-field>
+                  <div class="text-xs-center">
+                    <v-btn
+                      :loading="$store.state.loading"
+                      :disabled="$store.state.loading"
+                      color="primary"
+                      @click.prevent="onsubmited">
+                      ورود
+                    </v-btn>
+                  </div>
+                </v-form>
               </v-container>
-            </v-card-title>
-          </v-img>
-
-          <v-alert v-if="$store.state.loginErrorMessage !==null" value="true" type="error">
-            {{ $store.state.loginErrorMessage }}
-          </v-alert>
-
-          <v-card-actions>
-            <v-container class="text-md-center">
-              <v-form @submit.prevent="onsubmited">
-                <v-text-field
-                  prepend-icon="person"
-                  v-model="username"
-                  :error-messages="usernameErrors"
-                  label="نام کاربری"
-                  name="username"
-                  required
-                  @input="$v.username.$touch()"
-                  @blur="$v.username.$touch()"></v-text-field>
-
-                <v-text-field
-                  v-model="password"
-                  :error-messages="passwordErrors"
-                  label="کلمه عبور"
-                  name="password"
-                  prepend-icon="lock"
-                  required
-                  @input="$v.password.$touch()"
-                  @blur="$v.password.$touch()"></v-text-field>
-                <div class="text-xs-center">
-                  <v-btn
-                    :loading="$store.state.loading"
-                    :disabled="$store.state.loading"
-                    color="primary"
-                    @click="onsubmited"
-                  >
-                    ورود
-                  </v-btn>
-                </div>
-              </v-form>
-            </v-container>
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-      <!--<v-snackbar v-model="show">-->
-      <!--asd-->
-      <!--<v-btn flat color="accent" @click.native="show = false">Close</v-btn>-->
-      <!--</v-snackbar>-->
-    </v-layout>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </transition>
   </div>
 
 </template>
@@ -85,7 +87,6 @@ export default {
 
   data () {
     return {
-      // show: false,
       loader: null,
       username: '',
       password: ''
